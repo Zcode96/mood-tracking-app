@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { Sparkles } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -44,24 +45,30 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-svh w-full items-center justify-center bg-background p-6">
-      <div className="w-full max-w-sm">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/10 pointer-events-none" />
+      <div className="w-full max-w-sm relative">
         <div className="flex flex-col gap-6">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-foreground">MoodTrack</h1>
-            <p className="text-muted-foreground mt-2">Track your emotional wellness</p>
+            <Link href="/" className="inline-flex items-center gap-2 mb-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                <Sparkles className="h-5 w-5 text-primary" />
+              </div>
+              <span className="text-2xl font-bold text-foreground">MoodTrack</span>
+            </Link>
+            <p className="text-muted-foreground">Welcome back to your wellness journey</p>
           </div>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl">Welcome back</CardTitle>
-              <CardDescription>
-                Enter your email to sign in to your account
+          <Card className="border-border/50 shadow-xl shadow-primary/5">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl text-foreground">Sign in</CardTitle>
+              <CardDescription className="text-muted-foreground">
+                Enter your credentials to continue
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleLogin}>
                 <div className="flex flex-col gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email" className="text-foreground">Email</Label>
                     <Input
                       id="email"
                       type="email"
@@ -69,28 +76,34 @@ export default function LoginPage() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      className="border-border/50 bg-background"
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password" className="text-foreground">Password</Label>
                     <Input
                       id="password"
                       type="password"
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      className="border-border/50 bg-background"
                     />
                   </div>
                   {error && <p className="text-sm text-destructive">{error}</p>}
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25 h-11" 
+                    disabled={isLoading}
+                  >
                     {isLoading ? 'Signing in...' : 'Sign in'}
                   </Button>
                 </div>
-                <div className="mt-4 text-center text-sm">
+                <div className="mt-6 text-center text-sm text-muted-foreground">
                   {"Don't have an account? "}
                   <Link
                     href="/auth/sign-up"
-                    className="underline underline-offset-4 hover:text-primary"
+                    className="font-medium text-primary hover:text-primary/80 underline-offset-4 hover:underline"
                   >
                     Sign up
                   </Link>

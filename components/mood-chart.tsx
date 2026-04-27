@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { format, subDays, startOfDay, isSameDay } from 'date-fns'
+import { TrendingUp, BarChart3 } from 'lucide-react'
 
 interface MoodEntry {
   id: string
@@ -15,7 +16,8 @@ interface MoodChartProps {
   entries: MoodEntry[]
 }
 
-const moodLabels = ['', 'Terrible', 'Bad', 'Okay', 'Good', 'Great']
+const moodLabels = ['', 'Struggling', 'Low', 'Neutral', 'Good', 'Thriving']
+const moodEmojis = ['', '😢', '😔', '😐', '😊', '😄']
 
 export function MoodChart({ entries }: MoodChartProps) {
   // Create data for the last 7 days
@@ -40,28 +42,47 @@ export function MoodChart({ entries }: MoodChartProps) {
 
   if (!hasData) {
     return (
-      <Card>
+      <Card className="border-border/50 shadow-sm">
         <CardHeader>
-          <CardTitle>Weekly Trend</CardTitle>
-          <CardDescription>Your mood pattern over the last 7 days</CardDescription>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/50">
+              <TrendingUp className="h-5 w-5 text-accent-foreground" />
+            </div>
+            <div>
+              <CardTitle className="text-foreground">Weekly Insights</CardTitle>
+              <CardDescription className="text-muted-foreground">Your mood pattern over the last 7 days</CardDescription>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
-          <p className="text-center text-muted-foreground py-8">
-            Start logging moods to see your weekly trend!
-          </p>
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary">
+              <BarChart3 className="h-7 w-7 text-secondary-foreground" />
+            </div>
+            <p className="text-muted-foreground">No data yet</p>
+            <p className="text-sm text-muted-foreground/70 mt-1">Start logging moods to see your weekly trend</p>
+          </div>
         </CardContent>
       </Card>
     )
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Weekly Trend</CardTitle>
-        <CardDescription>Your mood pattern over the last 7 days</CardDescription>
+    <Card className="border-border/50 shadow-sm overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-primary/5 pointer-events-none" />
+      <CardHeader className="relative">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/50">
+            <TrendingUp className="h-5 w-5 text-accent-foreground" />
+          </div>
+          <div>
+            <CardTitle className="text-foreground">Weekly Insights</CardTitle>
+            <CardDescription className="text-muted-foreground">Your mood pattern over the last 7 days</CardDescription>
+          </div>
+        </div>
       </CardHeader>
-      <CardContent>
-        <div className="h-[200px] w-full">
+      <CardContent className="relative">
+        <div className="h-[220px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={last7Days}
@@ -69,34 +90,39 @@ export function MoodChart({ entries }: MoodChartProps) {
             >
               <defs>
                 <linearGradient id="moodGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0} />
+                  <stop offset="5%" stopColor="oklch(0.65 0.15 195)" stopOpacity={0.4} />
+                  <stop offset="50%" stopColor="oklch(0.80 0.12 290)" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="oklch(0.80 0.12 290)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis
                 dataKey="date"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                tick={{ fontSize: 12, fill: 'oklch(0.50 0.03 280)' }}
               />
               <YAxis
                 domain={[1, 5]}
                 ticks={[1, 2, 3, 4, 5]}
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
-                tickFormatter={(value) => moodLabels[value]?.charAt(0) || ''}
+                tick={{ fontSize: 12, fill: 'oklch(0.50 0.03 280)' }}
+                tickFormatter={(value) => moodEmojis[value] || ''}
               />
               <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload
+                    const moodValue = Math.round(data.mood)
                     return (
-                      <div className="rounded-lg border bg-background p-2 shadow-sm">
-                        <p className="text-sm font-medium">{data.fullDate}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {data.mood ? moodLabels[Math.round(data.mood)] : 'No data'}
-                        </p>
+                      <div className="rounded-xl border border-border/50 bg-card p-3 shadow-lg">
+                        <p className="text-sm font-medium text-foreground">{data.fullDate}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-lg">{moodEmojis[moodValue]}</span>
+                          <span className="text-sm text-muted-foreground">
+                            {data.mood ? moodLabels[moodValue] : 'No data'}
+                          </span>
+                        </div>
                       </div>
                     )
                   }
@@ -106,8 +132,8 @@ export function MoodChart({ entries }: MoodChartProps) {
               <Area
                 type="monotone"
                 dataKey="mood"
-                stroke="hsl(var(--chart-2))"
-                strokeWidth={2}
+                stroke="oklch(0.65 0.15 195)"
+                strokeWidth={3}
                 fill="url(#moodGradient)"
                 connectNulls
               />
