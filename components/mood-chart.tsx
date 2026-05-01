@@ -42,25 +42,25 @@ export function MoodChart({ entries }: MoodChartProps) {
 
   if (!hasData) {
     return (
-      <Card className="border-border/50 shadow-sm">
+      <Card className="border-border/40 shadow-lg shadow-primary/5 backdrop-blur-sm bg-card/90 rounded-3xl">
         <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/50">
-              <TrendingUp className="h-5 w-5 text-accent-foreground" />
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/30 to-primary/10">
+              <TrendingUp className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <CardTitle className="text-foreground">Weekly Insights</CardTitle>
+              <CardTitle className="text-foreground text-xl">Weekly Insights</CardTitle>
               <CardDescription className="text-muted-foreground">Your mood pattern over the last 7 days</CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary">
-              <BarChart3 className="h-7 w-7 text-secondary-foreground" />
+          <div className="flex flex-col items-center justify-center py-14 text-center">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-secondary to-secondary/60">
+              <BarChart3 className="h-8 w-8 text-secondary-foreground" />
             </div>
-            <p className="text-muted-foreground">No data yet</p>
-            <p className="text-sm text-muted-foreground/70 mt-1">Start logging moods to see your weekly trend</p>
+            <p className="text-foreground font-medium">No data yet</p>
+            <p className="text-sm text-muted-foreground mt-1">Start logging moods to see your weekly trend</p>
           </div>
         </CardContent>
       </Card>
@@ -68,15 +68,15 @@ export function MoodChart({ entries }: MoodChartProps) {
   }
 
   return (
-    <Card className="border-border/50 shadow-sm overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-primary/5 pointer-events-none" />
+    <Card className="border-border/40 shadow-lg shadow-primary/5 overflow-hidden backdrop-blur-sm bg-card/90 rounded-3xl">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-accent/5 pointer-events-none" />
       <CardHeader className="relative">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/50">
-            <TrendingUp className="h-5 w-5 text-accent-foreground" />
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/30 to-primary/10">
+            <TrendingUp className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <CardTitle className="text-foreground">Weekly Insights</CardTitle>
+            <CardTitle className="text-foreground text-xl">Weekly Insights</CardTitle>
             <CardDescription className="text-muted-foreground">Your mood pattern over the last 7 days</CardDescription>
           </div>
         </div>
@@ -90,23 +90,23 @@ export function MoodChart({ entries }: MoodChartProps) {
             >
               <defs>
                 <linearGradient id="moodGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="oklch(0.65 0.15 195)" stopOpacity={0.4} />
-                  <stop offset="50%" stopColor="oklch(0.80 0.12 290)" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="oklch(0.80 0.12 290)" stopOpacity={0} />
+                  <stop offset="5%" stopColor="oklch(0.58 0.18 200)" stopOpacity={0.5} />
+                  <stop offset="50%" stopColor="oklch(0.78 0.10 295)" stopOpacity={0.25} />
+                  <stop offset="95%" stopColor="oklch(0.78 0.10 295)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis
                 dataKey="date"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 12, fill: 'oklch(0.50 0.03 280)' }}
+                tick={{ fontSize: 12, fill: 'oklch(0.45 0.03 280)' }}
               />
               <YAxis
                 domain={[1, 5]}
                 ticks={[1, 2, 3, 4, 5]}
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 12, fill: 'oklch(0.50 0.03 280)' }}
+                tick={{ fontSize: 12, fill: 'oklch(0.45 0.03 280)' }}
                 tickFormatter={(value) => moodEmojis[value] || ''}
               />
               <Tooltip
@@ -115,10 +115,10 @@ export function MoodChart({ entries }: MoodChartProps) {
                     const data = payload[0].payload
                     const moodValue = Math.round(data.mood)
                     return (
-                      <div className="rounded-xl border border-border/50 bg-card p-3 shadow-lg">
-                        <p className="text-sm font-medium text-foreground">{data.fullDate}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-lg">{moodEmojis[moodValue]}</span>
+                      <div className="rounded-2xl border border-border/50 bg-card/95 backdrop-blur-md p-4 shadow-xl">
+                        <p className="text-sm font-semibold text-foreground">{data.fullDate}</p>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          <span className="text-xl">{moodEmojis[moodValue]}</span>
                           <span className="text-sm text-muted-foreground">
                             {data.mood ? moodLabels[moodValue] : 'No data'}
                           </span>
@@ -132,7 +132,7 @@ export function MoodChart({ entries }: MoodChartProps) {
               <Area
                 type="monotone"
                 dataKey="mood"
-                stroke="oklch(0.65 0.15 195)"
+                stroke="oklch(0.58 0.18 200)"
                 strokeWidth={3}
                 fill="url(#moodGradient)"
                 connectNulls
